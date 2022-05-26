@@ -6,7 +6,7 @@ import { token, url } from './Helper';
 
 function App() {
 
-  const [studentname ,setData]=useState("satyam")
+  const [studentname ,setData]=useState("")
   //useEffect(() => {
 
   //},[]);
@@ -28,16 +28,33 @@ fetch(
   //'Accept: application/json'
   },
   body: JSON.stringify(data)
-}).then((d)=>{console.log(d.status)
-if(d.status=== 200){
+}) .then(response => response.json())
+.then((d)=>
+{
+  if('error' in d){
 
-swal("Great Job","data created success","succss")
 
-}
+    if(d.error.status=== 401){
+
+      // console.log("Error",d.error.message)
+       swal(d.error.name,d.error.message,"error")
+       }
+  }
+  else{
+    if(Object.keys(d.data).length!== 0){
+
+      swal("good job", "Data has been has created","success")
+      
+      }
+
+  }
+  //console.log(d.error.status)
+  //console.log(d.error.message,d.error.name)
+
 
 }).catch((e)=>{
 
-  swal("Great Job","bad","fail")
+console.log("errt",e);
 
 }).finally((all)=>{
  
@@ -49,7 +66,7 @@ swal("Great Job","data created success","succss")
       {studentname }
   <form>
       <label>Enter your name:
-        <input type="text" value={studentname} onChange={(e)=>{setData(e.target.value)}} />
+        <input type="text" value={studentname} autoFocus onChange={(e)=>{setData(e.target.value)}} />
       </label>
       <input type="button" name="student" onClick={myfunction} value="save button" />
     </form>
